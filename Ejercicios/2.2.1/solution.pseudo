@@ -1,0 +1,58 @@
+// CONSIGNA:
+// Se dispone de una secuencia con los datos de los alumnos de la facultad:
+// 
+// Apellido y Nombre
+// Carrera (ISI - IEM - IQ)
+// Nº de Legajo
+// Fecha de Nacimiento
+// Fecha de Ingreso
+// D.N.I.
+// Sexo (M o F)
+// Fecha de último examen aprobado
+// Nota
+// 
+// Se desea un listado de los mismos, con el siguiente formato:
+// 
+// Nro_Legajo 
+// Apellido_Nombre
+// Documento
+// Carrera
+
+ACCION listado_de_alumnos ES
+AMBIENTE
+  Carrera = REGISTRO
+    nombre: {"ISI", "IEM", "IQ"}
+  FIN_REGISTRO
+
+  Fecha = REGISTRO
+    dia: ENTERO(2)
+    mes: ENTERO(2)
+    anio: ENTERO(4)
+  FIN_REGISTRO
+
+  Alumno = REGISTRO
+    nombre_completo: ALFA(30)
+    carrera: Carrera
+    legajo: ENTERO(5)
+    fdn: Fecha
+    fdi: Fecha
+    dni: ENTERO(10)
+    sexo: ALFA(1)
+    ult_examen_ap: Fecha
+    nota: ENTERO(2)
+  FIN_REGISTRO
+
+  archivo_de_alumnos: Archivo de Alumno
+  alumno: Alumno
+
+PROCESO
+  Abrir E/(archivo_de_alumnos); Leer(archivo_de_alumnos, alumno)
+
+  MIENTRAS NFDA(archivo_de_alumnos) HACER:
+    ESC("Legajo: ", alumno.legajo, ", Nombre: ", alumno.nombre_completo)
+    ESC("DNI: ", alumno.dni, ", Carrera: ", alumno.carrera.nombre)
+    LEER(archivo_de_alumnos, alumno)
+  FIN_MIENTRAS
+
+  CERRAR(archivo_de_alumnos)
+FIN_ACCION
