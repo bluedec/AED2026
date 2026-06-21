@@ -1,0 +1,41 @@
+// Dada la siguiente secuencia de datos con el siguiente formato:
+// 
+// Nº de socio
+// Nº de teléfono
+// Apellido y Nombre
+// Carrera (ISI - IEM - IQ - LAR)
+// Domicilio
+// Cantidad de unidades prestadas
+// Correspondiente a los alumnos socios de la Biblioteca, generar la secuencia de los alumnos de
+// “ISI” que tengan prestadas más de 4 unidades bibliográficas.
+
+
+ACCION retiradores_seriales ES:
+AMBIENTE
+  Socio = REGISTRO
+    num_soc: ENTERO
+    num_tel: ENTERO
+    nombre: ALFA(100)
+    carrera: {"ISI", "AR", "IEM", "IQ"}
+    domicilio: ALFA(150)
+    unidades: ENTERO
+  FIN_REGISTRO
+  
+  arch: Archivo de Socio
+  socio: Socio
+  arch_salida: Archivo de Socio
+PROCESO
+  ABRIR E/(arch);
+  ABRIR S/(arch_salida);
+  LEER(arch, socio);
+  MIENTRAS NFDA(arch) HACER:
+    SI socio.carrera = "ISI" HACER:
+      SI socio.unidades > 4 HACER:
+        GRABAR(arch_salida, socio)
+      FIN_SI
+    FIN_SI
+    LEER(arch, socio)
+  FIN_MIENTRAS
+  CERRAR(arch)
+FIN_ACCION
+

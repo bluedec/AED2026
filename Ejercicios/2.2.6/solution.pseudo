@@ -1,0 +1,50 @@
+ACCION escribir_recomendacion ES:
+AMBIENTE
+  Graduado = REGISTRO
+    nomb: ALFA(100)
+    prom: REAL(1,2)
+  FIN_REGISTRO
+  neg, pos, fav, muy_fav, total: ENTERO
+  arch_grad: Archivo de Graduado
+  grad: Graduado
+  PROCEDIMIENTO escribir_reco(grad: Graduado):
+    SI grad.prom < 7 HACER:
+      neg := neg + 1
+      ESC(grad.nombre, " | ", grad.prom, " | ", "NO")
+    FIN_SI
+    SI grad.prom > 7 y grad.prom < 8 HACER:
+      pos := pos + 1
+      ESC(grad.nombre, " | ", grad.prom, " | ", "SI")
+    FIN_SI
+    SI grad.prom > 8 y grad.prom < 9 HACER:
+      fav := fav + 1
+      ESC(grad.nombre, " | ", grad.prom, " | ", "F")
+    FIN_SI
+    SI grad.prom > 9 HACER:
+      muy_fav := muy_fav + 1
+      ESC(grad.nombre, " | ", grad.prom, " | ", "MF")
+    FIN_SI
+  FIN_PROCEDIMIENTO
+PROCESO
+  ABRIR E/(arch_grad); 
+  LEER(arch_grad, grad)
+  neg, pos, fav, muy_fav = 0
+
+  MIENTRAS NFDA(arch_grad) HACER:
+    escribir_reco(grad);
+    LEER(arch_grad);
+  FIN_MIENTRAS
+  total := neg + pos + fav + muy_fav
+  ESC("--")
+  ESC("En total se encontraron")
+  ESC("Graduados NEGATIVOS: ", neg)
+  ESC("Graduados POSITIVOS: ", pos)
+  ESC("Graduados FAVORABLES: ", fav)
+  ESC("Graduados MUY FAVORABLES: ", muy_fav)
+  ESC("En promedio...")
+  ESC("El ", (neg / total) * 100 , "% fueron negativos")
+  ESC("El ", (pos / total) * 100 , "% fueron positivos")
+  ESC("El ", (fav / total) * 100 , "% fueron favorables")
+  ESC("El ", (muy_fav / total) * 100 , "% fueron muy favorables")
+  CERRAR(arch_grad)
+FIN_ACCION
