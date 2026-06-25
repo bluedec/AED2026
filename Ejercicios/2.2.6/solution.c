@@ -21,6 +21,23 @@ typedef struct {
   float avg;
 } Graduado;
 
+char *RecommendationStatus(Graduado *grad) {
+  char *a = "";
+  if (grad->avg < 7.0){
+    return a = "No";
+  }
+  if (grad->avg < 8.0){
+    return a = "Si";
+  }
+  if (grad->avg < 9.0){
+    return a = "F";
+  }
+  if (grad->avg >= 9.0){
+    return a = "MF";
+  }
+  return a;
+}
+
 int main() {
   FILE *fptr = fopen("./Ejercicios/2.2.6/graduados.csv", "r");
   if (fptr == NULL) {
@@ -58,7 +75,7 @@ int main() {
       gd.fullname[i] = line[i];
       i++;
     }
-    printf("%s\n", gd.fullname);
+    gd.fullname[i] = '\0';
     i++;
     int f = 0;
     while (line[i] != '\0') {
@@ -66,12 +83,8 @@ int main() {
       f++;
       i++;
     }
-    avg = strtof(avgStr, NULL);
     gd.avg = strtof(avgStr, NULL);
-    printf("gd.avg: %.1f\n", gd.avg);
-
-    // printf("Grad: %s, Promedio: %.2f\n", gd.fullname, gd.avg);
-
+    printf("%s %.1f %s\n", gd.fullname, gd.avg, RecommendationStatus(&gd));
   }
 
 
