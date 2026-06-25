@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,18 +22,18 @@ typedef struct {
   float avg;
 } Graduado;
 
-char *RecommendationStatus(Graduado *grad) {
+char *RecommendationStatus(Graduado *gd) {
   char *a = "";
-  if (grad->avg < 7.0){
+  if (gd->avg < 7.0){
     return a = "No";
   }
-  if (grad->avg < 8.0){
+  if (gd->avg < 8.0){
     return a = "Si";
   }
-  if (grad->avg < 9.0){
+  if (gd->avg < 9.0){
     return a = "F";
   }
-  if (grad->avg >= 9.0){
+  if (gd->avg >= 9.0){
     return a = "MF";
   }
   return a;
@@ -49,13 +50,22 @@ int main() {
   int capacity = 10;
   int count = 0;
 
+  int gn, gs, gf, gm;
+  gn = gs = gf = gm = 0;
+
   float avg = 0.0;
   char avgStr[3];
 
+
   Graduado *listOfGrads = malloc(capacity * sizeof(Graduado));
+  Graduado gd;
 
   char line[1024];
-  while (fgets(line, sizeof(line), fptr)) {
+  if (fgets(line, sizeof(line), fptr) != NULL) {
+    // First line skipped
+  }
+
+  while (fgets(line, sizeof(line), fptr) != NULL) {
     count += 1;
     if (count == capacity) {
       capacity *= 2;
@@ -68,7 +78,6 @@ int main() {
       continue;
     }
 
-    Graduado gd;
 
     int i = 0;
     while (line[i] != ',') {
@@ -83,10 +92,37 @@ int main() {
       f++;
       i++;
     }
-    gd.avg = strtof(avgStr, NULL);
-    printf("%s %.1f %s\n", gd.fullname, gd.avg, RecommendationStatus(&gd));
-  }
 
+    gd.avg = strtof(avgStr, NULL);
+    char *reco = "";
+    if (gd.avg < 7.0){
+      reco = "No";
+      gn++;
+    } else if (gd.avg < 8.0){
+      reco = "Si";
+      gs++;
+    } else if (gd.avg < 9.0){
+      reco = "F";
+      gf++;
+    } else if (gd.avg >= 9.0){
+      reco = "MF";
+      gm++;
+    }
+    printf("%s %.1f %s\n", gd.fullname, gd.avg, reco);
+  }
+  printf("Graduados...\n");
+  printf("  No Recomendados: %d\n", gn);
+  printf("  Recomendados:    %d\n", gs);
+  printf("  Favorables:      %d\n", gf);
+  printf("  Muy Favorables:  %d\n", gm);
+
+  int total = (gn + gs + gf + gm);
+
+  printf("En promedio...\n");
+  printf("  El %d %% fueron negativos\n", (gn * 100) / total);
+  printf("  El %d %% fueron negativos\n", (gs * 100) / total);
+  printf("  El %d %% fueron negativos\n", (gf * 100) / total);
+  printf("  El %d %% fueron negativos\n", (gm * 100) / total);
 
   return 0;
 }

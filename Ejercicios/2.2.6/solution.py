@@ -22,7 +22,7 @@ def solution():
             elif p < 9:
                 fav += 1
                 print(graduado.apynom, " ", p, " ", "F")
-            elif p > 9:
+            elif p >= 9:
                 muy_fav += 1
                 print(graduado.apynom, " ", p, " ", "MF")
 
@@ -36,7 +36,7 @@ def solution():
     print("Graduados MUY FAVORABLES: ", muy_fav)
     print("En promedio...")
     print("El", round((neg / total) * 100), "% fueron negativos")
-    print("El",  round((pos / total) * 100), "% fueron positivos")
+    print("El", round((pos / total) * 100), "% fueron positivos")
     print("El", round((fav / total) * 100), "% fueron favorables")
     print("El", round((muy_fav / total) * 100), "% fueron muy favorables")
     return
