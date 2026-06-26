@@ -1,0 +1,45 @@
+
+// Del archivo general de alumnos de la U.T.N. - Facultad Regional Resistencia, ordenado por carrera,
+// se desea emitir la cantidad de alumnos correspondientes a cada carrera y el total general.
+
+ACCION total_carreras ES
+AMBIENTE
+  PROCEDIMIENTO Corte ES
+    ESC("Alumnos en ", resg_carrera, ": ", cont)
+    total := total + cont
+    cont := 0
+    resg_carrera := alumno.carrera
+  FIN_PROCEDIMIENTO
+
+  Alumno = REGISTRO
+    legajo: ENTERO(5)
+    nombre: ALFA(50)
+    apellido: ALFA(50)
+    carrera: { "ISI", "IQ", "IEM", "TUP", "IC" }
+  FIN_REGISTRO
+
+  arch: Archivo de Alumno ordenado por carrera 
+  alumno: Alumno
+  cont: ENTERO
+  resg_carrera: ALFA(50)
+  total: ENTERO
+
+PROCESO
+  Abrir E/(arch);
+  LEER(arch, alumno);
+  total = 0;
+  cont = 0;
+  resg_carrera = alumno.carrera;
+
+  MIENTRAS NFDA(arch) HACER:
+    SI alumno.carrera != resg_carrera HACER:
+      Corte()
+    FIN_SI
+    cont = cont + 1
+    LEER(arch, alumno)
+  FIN_MIENTRAS
+  Corte()
+
+  ESC("El total de alumnos en la UTN FRRE es: ", total);
+  CERRAR(arch)
+FIN_ACCION

@@ -1,4 +1,4 @@
-# Algoritmos y Estructuras de Datos
+# Soluciones a Problemas de AED2026
 
 Repositorio con mis soluciones a los ejercicios y problemas de la materia **Algoritmos y Estructuras de Datos** (cursada 2026).
 
