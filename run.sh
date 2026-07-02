@@ -29,7 +29,9 @@ FILE="./Ejercicios/$PROBLEM_NAME/solution.$FILE_EXTENSION"
 
 # 3. Check if the program exists and is executable
 if [ -f "$FILE" ]; then
-    echo "Running problem '$PROBLEM_NAME' in $FILE_EXTENSION..."
+    echo ""
+    echo "⌠ Bienvenido  "
+    echo "⌡ Running problem '$PROBLEM_NAME' in $FILE_EXTENSION..."
     echo "--------------------------"
     if [ $FILE_EXTENSION == "c" ]; then
       gcc "$FILE" -o "./bin/$PROBLEM_NAME.out"
