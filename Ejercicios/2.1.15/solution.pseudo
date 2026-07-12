@@ -1,0 +1,48 @@
+// Se desea saber la cantidad promedio de palabras que contienen las oraciones de una secuencia de caracteres.
+// 
+// Supóngase que los puntos son siempre contiguos al último caracter de la palabra.
+// 
+// La secuencia finaliza con una marca.
+
+ACCION prom_palabras ES
+AMBIENTE
+  sec: secuencia de caracter
+  c: caracter
+  cont_pal: entero
+  cont_ora: entero
+  prom: real
+PROCESO
+  ARR(sec)
+  AVZ(sec, c)
+  cont_pal := 0
+  cont_ora := 0
+  prom := 0.0
+
+  MIENTRAS c <> '#' HACER
+    MIENTRAS c = ' ' HACER
+      AVZ(sec, c)
+    FIN_MIENTRAS
+
+    MIENTRAS c <> '.' y c <> '#' HACER
+      MIENTRAS c = ' ' HACER
+        AVZ(sec, c)
+      FIN_MIENTRAS
+
+      MIENTRAS c <> ' ' y c <> '.' HACER
+        AVZ(sec, c)
+      FIN_MIENTRAS
+      cont_pal := cont_pal + 1
+    FIN_MIENTRAS
+    SI c = '.' HACER
+      cont_ora := cont_ora + 1
+      AVZ(sec, c)
+    FIN_SI
+  FIN_MIENTRAS
+
+  SI cont_ora <> 0 HACER
+    prom := cont_pal / cont_ora
+    ESC("En promedio hay ", prom, " palabras por oracion en la secuencia.")
+  SINO
+    ESC("No se encontraron oraciones en la secuencia.")
+  FIN_SI
+FIN_ACCION

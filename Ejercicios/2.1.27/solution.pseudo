@@ -1,0 +1,98 @@
+// Elaborar un procedimiento que dada una secuencia de caracteres como entrada genere otra del mismo tipo como salida.
+// 
+// La secuencia de caracteres que se recibe incluye números de tarjetas de crédito, donde cada número tiene 16 dígitos.
+// 
+// Se desea obtener como resultado una nueva secuencia de salida con los números de tarjetas válidos.
+// El algoritmo para la validación de números de tarjetas de crédito es el siguiente: 
+// 
+// Para entender mejor el método usaremos un número correcto: 4073-7001-0977-4812, al que nos referiremos en el texto.
+// 
+// Nos centramos en los caracteres que ocupan las posiciones 1 y 3.
+// 
+// 4 0 7 3 7 0 0 1 0 9 7 7 4 8 1 2
+// 
+// Por cada uno de ellos obtenemos el doble del valor que representan.
+// Si el número resultante es menor que 9, se deja tal cual; en caso contrario, se le resta 9.
+// En nuestro ejemplo: 4 * 2 = 8; 7 * 2 = 14, mayor que nueve, se le resta 9. 14 - 9 = 5.
+// Si el número resultante de la suma de las multiplicaciones y de los dígitos en las posiciones 1 y 3, es 
+// múltiplo de 2 y a la vez menor o igual a 15, es un número de tarjeta válido.
+// 
+// Para nuestro ejemplo: 8 + 5 = 13; por lo tanto el número es válido.
+
+ACCION tarjetas ES
+AMBIENTE
+  sec: secuencia de caracter
+  sal: secuencia de caracter
+  c: caracter
+  pos: entero
+  c1, c2: caracter
+  n1, n3: entero
+  valid: logico
+  funcion trabajar_nums(n1: entero, n2: entero): entero
+    ambiente
+      x, y, z: entero
+    proceso
+      x := n1 * 2
+      y := n2 * 2
+      SI x >= 9 HACER
+        x := x - 9
+      FIN_SI
+      SI y >= 9 HACER
+        y := y - 9
+      FIN_SI
+      z := y + x
+      trabajar_nums := z
+    fin_funcion
+
+  funcion char_a_num(c: caracter): entero
+    ambiente 
+      x: entero
+    proceso
+      SEGUN c:
+        ='0': x := 0
+        ='1': x := 1
+        ='2': x := 2
+        ...
+      FIN_SEGUN
+      char_a_num := x
+  fin_funcion
+  funcion es_valido(num: entero): logico
+    SI num % 2 = 0 y num <= 15 HACER
+      es_valido := V
+    SINO
+      es_valido := F
+    FIN_SI
+  fin_funcion
+
+PROCESO
+  ARR(sec)
+  AVZ(sec, c)
+  CREAR(sal)
+  n1 := 0
+  n3 := 0
+
+  MIENTRAS NFDS(sec) HACER
+    valid := F
+    PARA pos:=1; pos <= 16; pos+1 HACER
+      SI pos = 1 HACER
+        c1 := c
+        n1 := char_a_num(c)
+      FIN_SI
+      SI pos = 2 HACER
+        c2 := c
+      FIN_SI
+      SI pos = 3 HACER
+        n3 := char_a_num(c)
+        valid := es_valido(trabajar_nums(n1, n3))
+        SI valid HACER
+          ESC(sal, c1)
+          ESC(sal, c2)
+        FIN_SI
+      FIN_SI
+      SI valid y NFDS(sec) HACER
+        ESC(sal, c)
+      FIN_SI
+      AVZ(sec, c)
+    FIN_PARA
+  FIN_MIENTRAS
+FIN_ACCION

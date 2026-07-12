@@ -1,0 +1,54 @@
+// Se dispone de una secuencia de caracteres. 
+// Se desea listar las palabras que comiencen con "ALG".
+// Determinar el porcentaje que representan las palabras que comienzan
+// con "ALG" sobre todas las palabras de la secuencia.
+ACCION palabras_con_alg ES
+AMBIENTE
+  sec: secuencia de caracter
+  palabra_valida: secuencia de caracter
+  c: caracter
+  cont, total: entero
+  es_valida: logico
+PROCESO
+  ARR(sec)
+  AVZ(sec, c)
+  cont = 0
+  total = 0
+  
+  MIENTRAS NFDS(sec) HACER
+    MIENTRAS c = ' ' o c = '.' HACER
+      AVZ(sec, c)
+    FIN_MIENTRAS
+    // Inicializamos para (teoricamente) resetear la secuencia
+    ARR(palabra_valida)
+
+    es_valida := F
+    SI NFDS(sec) y c = 'A' HACER
+      ESC(palabra_valida, c)
+      AVZ(sec, c)
+      SI NFDS(sec) y c = 'L' HACER
+        ESC(palabra_valida, c)
+        AVZ(sec, c)
+        SI NFDS(sec) y c = 'G' HACER
+          cont := cont + 1
+          es_valida := V
+          ESC(palabra_valida, c)
+          AVZ(sec, c)
+        FIN_SI
+      FIN_SI
+    FIN_SI
+
+    MIENTRAS NFDS(sec) y c <> ' ' y c <> '.' HACER
+      SI (es_valida) HACER
+        ESC(palabra_valida, c)
+      FIN_SI
+      AVZ(sec, c)
+    FIN_MIENTRAS
+
+    SI (es_valida) HACER
+      ESC(palabra_valida)
+    FIN_SI
+    total := total + 1
+  FIN_MIENTRAS
+  ESC("El porcentaje de palabras que comenzaron con ALG fueron del: ", (cont / total) * 100);
+FIN_ACCION

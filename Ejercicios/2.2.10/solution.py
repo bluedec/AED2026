@@ -3,9 +3,9 @@
 # se desea emitir la cantidad de alumnos correspondientes a cada carrera y el total general.
 
 import csv
+import sys
 
 from dataclasses import dataclass
-
 
 @dataclass
 class Student:
@@ -18,6 +18,7 @@ def solution():
     saved_degree = ""
     total_count = 0;
     degree_count = 0;
+    folder_path = sys.argv[1];
 
     def Degree_Cut():
         nonlocal total_count;
@@ -30,7 +31,7 @@ def solution():
         degree_count = 0
         return
 
-    with open('./Ejercicios/2.2.10/alumnos.csv', mode='r', newline='') as file:
+    with open(folder_path + '/Ejercicios/2.2.10/alumnos.csv', mode='r', newline='') as file:
         reader = csv.DictReader(file);
         saved_degree = next(reader)["Carrera"];
         degree_count += 1

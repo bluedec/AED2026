@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -59,18 +58,17 @@ int main(int argc, char *argv[]) {
   int offset = 0;
   char *curr_degree;
   int degree_length;
+  char buf[PATH_MAX];
+
   if (argv[1] == NULL) {
     printf("No absolute path was provided by the calling script.");
     return 1;
   }
   char *path = strcat(argv[1], "/Ejercicios/2.2.10/alumnos.csv");
 
-  char buf[PATH_MAX];
   char *res = realpath(path, buf);
 
-  if (res) {
-    printf("Source is at: %s\n", res);
-  } else {
+  if (res == NULL) {
     perror("Error resolving path.\n");
     return 1;
   }

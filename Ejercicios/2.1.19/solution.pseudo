@@ -1,0 +1,57 @@
+// Dada una secuencia de caracteres, generar otra secuencia con todas las palabras de tres caracteres.
+// Informar el porcentaje de las mismas, sobre el total de palabras de la secuencia de entrada.
+// Considerar que puede haber más de un blanco entre palabras.
+
+ACCION palabras_cortitas ES
+AMBIENTE
+  sec: secuencia de caracter
+  sec_sal: secuencia de caracter
+  c: caracter
+  cont_letras: entero
+  cont_pal: entero
+  cont_pal_triples: entero
+  l1: caracter
+  l2: caracter
+  l3: caracter
+PROCESO
+  ARR(sec)
+  AVZ(sec, c)
+  CREAR(sec_sal)
+  cont_pal := 0
+  cont_pal_triples := 0
+  cont_letras := 0
+
+  MIENTRAS NFDS(sec) HACER
+
+    MIENTRAS NFDS(sec) y c <> '.' HACER
+
+      MIENTRAS c = ' ' HACER
+        AVZ(sec, c)
+      FIN_MIENTRAS
+
+      cont_letras := 0
+      MIENTRAS NFDS(sec) y c <> '.' y c <> ' ' HACER
+        cont_letras := cont_letras + 1
+        SEGUN cont_letras:
+          =1 : l1 := c
+          =2 : l2 := c
+          =3 : l3 := c
+        FIN_SEGUN
+        AVZ(sec, c)
+      FIN_MIENTRAS
+      SI (cont_letras = 3) HACER
+        cont_pal_triples := cont_pal_triples + 1
+        ESC(sec_sal, l1)
+        ESC(sec_sal, l2)
+        ESC(sec_sal, l3)
+        ESC(sec_sal, ' ')
+      FIN_SI
+      cont_pal := cont_pal + 1
+    FIN_MIENTRAS
+    SI NFDS(sec) HACER
+      AVZ(sec, c)
+    FIN_SI
+  FIN_MIENTRAS
+
+  ESC("El porcentaje de palabras de tres digitos fue de: ", (cont_pal_triples / cont_pal) * 100);
+FIN_ACCION

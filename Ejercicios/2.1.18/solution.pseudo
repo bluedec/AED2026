@@ -1,0 +1,128 @@
+// La galería de pintura y arte nacional, PINTA DE ARGENTINA, almacena información sobre los artistas y sus obras de arte en secuencias de caracteres.
+// 
+// Durante todo el año, las obras de arte son expuestas en eventos de subasta y exposición, en los cuales se comercializan al público en general.
+// A fin de año la Comisión Directiva de la Galería solicita que, a partir de toda esa información, se generen algunos informes.
+// 
+// Se debe tener en cuenta lo siguiente:
+// 
+// - En la secuencia ARTISTAS, se almacena el estilo de arte ('R' – Renacentista, 'M' – Arte Moderno, 'B' – Barroco, 'S' – Surrealismo),
+// el nombre de cada artista, lugar de nacimiento, edad y cantidad de obras por artista.
+// 
+// - Los datos de cada artista están separados entre sí por el símbolo '+' y finalizan con el símbolo '?'.
+// 
+// - En la secuencia OBRAS, se almacena el nombre de la obra, el año en que fue hecha, su precio, precedido siempre del signo
+// '$' (solo 3 digitos) y su estado ('V' – Vendido, 'R' – Reservado, 'U' – Obra Única).
+// 
+// - Todos los datos de las obras están separados por el símbolo ',' y finalizan con el símbolo '/'.
+// 
+// - El creador de cada obra se determina de acuerdo al dato 'cantidad de obras' de la secuencia ARTISTAS,
+// por ej.: el autor RENE BARTOL tiene 2 obras, por lo cual las primeras 2 obras de la secuencia OBRAS le pertenecen, las siguientes 6,
+// pertenecen a JUAN B JUSTO, etc.
+// A continuación un ejemplo de ambas secuencias:
+// 
+// SECUENCIA ARTISTAS
+// 
+// M+RENE BARTOL+ROSARIO+34+2?R+JUAN B JUSTO+NEUQUEN+61+5?…………
+// 
+// SECUENCIAS OBRAS
+// SOL Y PARANA,1997,$913,V/GRITO DE ESPERANZA,2003,$235,R/PENAS,1997,$781,V/………
+// 
+// A partir de lo expuesto anteriormente, se pide:
+// 
+// Generar una secuencia de salida con información de los artistas Renacentistas. La secuencia debe contener el nombre del artista
+// seguido de sus obras (nombre y año de creación).
+// Los datos correspondientes al mismo artista deben separarse entre sí con el signo '+' y finalizar con el signo '?'.
+// Al final del proceso informar:
+// La mayor cantidad de obras vendidas por un artista.
+// El porcentaje de obras de artistas "renacentistas" sobre el total de obras.
+
+ACCION artistas ES
+AMBIENTE
+  art: secuencia de caracter // M+Jose+CHACO+26+vendidos?
+  v1: caracter
+  obras: secuencia de caracter  // Nombre,2026,$pre,estado/
+  v2: caracter
+  art_rena: secuencia de caracter // nombre+obra_1+obra_2+mona lisa, 1998+obra_n?
+  best_seller: entero // mayor cantidad de vendidos
+  cont_obras: entero // obras
+  cont_obras_rena: entero // cobras renacentistas
+  prom: real(2, 2)
+  funcion char_a_num(char: caracter): entero
+    ambiente
+      x: entero
+    proceso
+      SEGUN char:
+        ='0' : x := 0
+        ='1' : x := 1
+        ...
+      FIN_SEGUN
+      char_a_num := x
+    fin_funcion
+PROCESO
+  ARR(art)
+  AVZ(art, v1)
+  ARR(obras)
+  AVZ(obras, v2)
+  CREAR(art_rena)
+  best_seller := 0
+  cont_obras := 0
+  cont_obras_rena := 0
+  prom := 0.00
+
+  MIENTRAS NFDS(art) y NFDS(obras) HACER
+    SI v1 = 'R' HACER // preguntar por las que no son renacentistas
+      AVZ(art, v1)
+      AVZ(art, v1)
+      // Leer Nombre
+      MIENTRAS v1 <> '+' HACER
+        ESC(art_rena, v1)
+        AVZ(art, v1)
+      FIN_MIENTRAS
+      AVZ(art, v1)
+      ESC(art_rena, '+')
+      // Leer Lugar
+      MIENTRAS v1 <> '+' HACER
+        AVZ(art, v1)
+      FIN_MIENTRAS
+      // Leer Edad
+      MIENTRAS v1 <> '+' HACER
+        AVZ(art, v1)
+      FIN_MIENTRAS
+      AVZ(art, v1)
+      cant_obras := 0
+      // Leer obras
+      MIENTRAS v1 <> '?' HACER
+        cant_obras := cant_obras * 10 + char_a_num(c)
+        AVZ(art, v1)
+      FIN_MIENTRAS
+      cont_obras_rena := cont_obras_rena + cant_obras
+
+      MIENTRAS
+
+        
+
+      
+      
+    
+
+
+    MIENTRAS NFDS(art) y v1 <> '+' HACER
+      
+      
+      MIENTRAS NFDS(art) y v1 <> '?' HACER
+      
+      
+
+        
+      
+      
+    
+
+
+
+
+
+  
+
+  
+

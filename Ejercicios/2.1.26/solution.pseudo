@@ -1,0 +1,72 @@
+// Se posee 2 secuencias (S1 y S2) con las cuales se desea generar una nueva secuencia (SAL) 
+// donde se intercalen las palabras de las secuencias de entrada, de la siguiente manera:
+// copiar de S1 aquellas palabras que empiezan con una letra que ingresa el usuario y de S2 aquellas palabras que estén en posición par.
+
+ACCION intercambio ES
+AMBIENTE
+  s1, s2: secuencia de caracter
+  v1, v2: caracter
+  sal: secuencia de caracter
+  letra: caracter
+  pos: entero
+  es_par: logico
+  insertado_s1: logico
+
+PROCESO
+  ARR(s1)
+  ARR(s2)
+  AVZ(s1, v1)
+  AVZ(s2, v2)
+  CREAR(sal)
+  pos := 0
+  ESC("Ingrese Letra")
+  LEER(letra)
+  es_par := F
+  insertado_s1 := F
+
+  MIENTRAS NFDS(s1) y NFDS(s2) HACER
+    MIENTRAS insertado_s1 = F HACER
+      MIENTRAS v1 = ' ' HACER
+        AVZ(s1, v1)
+      FIN_MIENTRAS
+      SI v1 = letra HACER
+        insertado_s1 := V
+        MIENTRAS NFDS(s1) y v1 <> ' ' y v1 <> '.' HACER
+          ESC(sal, v1)
+          AVZ(s1, v1)
+        FIN_MIENTRAS
+        ESC(sal, ' ')
+      SINO
+        MIENTRAS NFDS(s1) y v1 <> ' ' y v1 <> '.' HACER
+          AVZ(s1, v1)
+        FIN_MIENTRAS
+      FIN_SI
+    FIN_MIENTRAS
+
+    MIENTRAS insertado_s1 = V y NFDS(s1) HACER
+      MIENTRAS v2 = ' ' HACER 
+        AVZ(s2, v2)
+      FIN_MIENTRAS
+      SI v2 <> '.' y NFDS(s2) HACER
+        pos := pos + 1
+      FIN_SI
+      SI pos % 2 = 0 HACER
+        es_par := V
+        insertado_s1 := F
+      SINO 
+        es_par := F
+      FIN_SI
+      MIENTRAS v2 <> ' ' y NFDS(s2) y v2 <> '.' HACER
+        SI es_par HACER
+          ESC(sal, v2)
+          AVZ(s2, v2)
+        SINO 
+          AVZ(s2, v2)
+        FIN_SI
+        SI es_par HACER
+          ESC(sal, ' ')
+        FIN_SI
+      FIN_MIENTRAS
+    FIN_MIENTRAS
+  FIN_MIENTRAS
+FIN_ACCION

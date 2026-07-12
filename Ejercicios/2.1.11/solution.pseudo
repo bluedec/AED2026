@@ -1,0 +1,30 @@
+// Dada una secuencia de caracteres, determinar la cantidad de palabras de 4 caracteres (letras)
+
+ACCION palabras_de_4_letras ES
+AMBIENTE
+  sec: secuencia de caracter
+  c: caracter
+  CARACTERES := 4
+  cont: entero
+  longitud: entero
+PROCESO
+  ARR(sec)
+  AVZ(sec, c)
+  cont := 0
+  MIENTRAS NFDS(sec) HACER
+    MIENTRAS c = ' ' o c = '.' HACER
+      AVZ(sec, c)
+    FIN_MIENTRAS
+
+    longitud := 0
+    MIENTRAS NFDS(sec) y c <> ' ' y c <> '.' HACER
+      longitud := longitud + 1
+      AVZ(sec, c)
+    FIN_MIENTRAS
+    SI longitud = CARACTERES HACER
+      cont := cont + 1
+    FIN_SI
+  FIN_MIENTRAS
+  ESC("La cantidad de palabras de longitud 4 es de: ", cont)
+FIN_ACCION
+      

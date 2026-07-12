@@ -1,0 +1,57 @@
+// Se dispone de dos secuencias texto formadas por oraciones bimembres (sujeto y predicado, separados por comas ‘,’).
+// Se desea una secuencia texto de salida formada por oraciones bimembres, de la siguiente forma:
+
+// El sujeto, de la secuencia 1, y el predicado, de la secuencia 2.
+
+// Al finalizar informar cuántas oraciones tiene cada secuencia.
+
+ACCION palabras_bimembres ES
+AMBIENTE
+  sec1: secuencia de caracter
+  sec2: secuencia de caracter
+  v1: caracter
+  v2: caracter
+  sec_sal: secuencia de caracter
+  cont_ora_1: entero
+  cont_ora_2: entero
+PROCESO
+  ARR(sec1)
+  ARR(sec2)
+  AVZ(sec1, v1)
+  AVZ(sec2, v2)
+  CREAR(sec_sal)
+  cont_ora_1 := 0
+  cont_ora_2 := 0
+
+  MIENTRAS NFDS(sec1) y NFDS(sec2) HACER
+    MIENTRAS v1 <> ',' y NFDS(sec1) HACER
+      ESC(sec_sal, v1)
+      AVZ(sec1, v1)
+    FIN_MIENTRAS
+    MIENTRAS v1 <> '.' y NFDS(sec1) HACER
+      AVZ(sec1, v1)
+    FIN_MIENTRAS
+    SI v1 = '.' HACER
+      cont_ora_1 = cont_ora_1 + 1
+    FIN_SI
+    MIENTRAS v2 <> ',' y NFDS(sec2) HACER
+      AVZ(sec2, v2)
+    FIN_MIENTRAS
+    MIENTRAS v2 <> '.' y NFDS(sec2) HACER
+      ESC(sec_sal, v2)
+      AVZ(sec2, v2)
+    FIN_MIENTRAS
+    SI v2 = '.' HACER
+      cont_ora_2 = cont_ora_2 + 1
+    FIN_SI
+    ESC(sec_sal, v2)
+    AVZ(sec1, v1)
+    AVZ(sec2, v2)
+  FIN_MIENTRAS
+  ESC("En la secuencia 1 hubo: ", cont_ora_1, " oraciones.")
+  ESC("En la secuencia 2 hubo: ", cont_ora_2, " oraciones.")
+FIN_ACCION
+      
+
+        
+        

@@ -21,8 +21,8 @@ AMBIENTE
   arch: Archivo de Alumno ordenado por carrera 
   alumno: Alumno
   cont: ENTERO
-  resg_carrera: ALFA(50)
-  total: ENTERO
+  resg_carrera: ALFA
+  total: ALFA
 
 PROCESO
   Abrir E/(arch);

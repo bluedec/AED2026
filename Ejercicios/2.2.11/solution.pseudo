@@ -1,0 +1,91 @@
+ACCION alumnos_del_2009 ES
+AMBIENTE 
+  Llave = REGISTRO
+    sexo: ALFA(1)
+    carrera: ALFA(8)
+    legajo: ALFA(8)
+  FIN_REGISTRO
+
+  Alumno = REGISTRO
+    llave: Llave
+    fecha_ingreso: Fecha
+    tma: ENTERO(2)
+  FIN_REGISTRO
+
+  Fecha = REGISTRO
+    dia: ENTERO(2)
+    mes: ENTERO(2)
+    anio: ENTERO(4)
+  FIN_REGISTRO
+
+  arch: Archivo de Alumno ord. por llave
+  alumno: Alumno
+  rg_carr, rg_sx: ALFA
+
+  cont_total_pos: ENTERO
+  cont_total_neg: ENTERO
+  cont_sx_pos: ENTERO
+  cont_sx_neg: ENTERO
+  alum_pos: ENTERO
+  alum_neg: ENTERO
+
+  PROCEDIMIENTO CorteCarr() HACER
+    ESC("En", rg_carrera, "hay", alum_pos, "alumnos que aprobaron mas de 20 materias");
+    ESC("En", rg_carrera, "hay", alum_neg, "alumnos que aprobaron menos de 20 materias");
+    cont_sx_pos = cont_sx_pos + alum_pos;
+    cont_sx_neg = cont_sx_neg + alum_neg;
+    alum_pos = 0;
+    alum_neg = 0;
+    rg_carr = alumno.llave.carrera;
+  FIN_PROCEDIMIENTO
+
+  PROCEDIMIENTO CorteSx() HACER
+    CorteCarr();
+    ESC("De los ingresada/os en 2009...")
+    ESC("Del sexo:", rg_sx," hay:", cont_sx_pos, " con mas de 20 materias aprobadas")
+    ESC("Del sexo:", rg_sx," hay:", cont_sx_neg, " con menos de 20 materias aprobadas")
+    cont_total_pos = cont_total_pos + cont_sx_pos;
+    cont_total_neg = cont_total_neg + cont_sx_neg;
+    cont_sx_pos = 0
+    cont_sx_neg = 0
+    rg_sx = alumno.llave.sexo
+  FIN_PROCEDIMIENTO
+
+PROCESO
+  ABRIR E/(arch);
+  LEER(arch, alumno);
+  rg_sx = alumno.llave.sexo;
+  rg_carr = alumno.llave.carrera;
+
+  cont_total_pos = 0;
+  cont_total_neg = 0;
+  cont_sx_pos = 0;
+  cont_sx_neg = 0;
+  alum_pos = 0;
+  alum_neg = 0;
+
+  MIENTRAS NFDA(arch) HACER
+    SI rg_sx <> alumno.llave.sexo HACER
+      CorteSx()
+    SINO
+      SI rg_carr <> alumno.llave.carrera HACER
+        CorteCarr()
+      FIN_SI
+    FIN_SI
+
+    SI (alumno.fecha_ingreso.anio = 2009) HACER
+      SI (alumno.tma > 20) HACER
+        alum_pos = alum_pos + 1;
+      FIN_SI
+      SI (alumno.tma < 20) HACER
+        alum_neg = alum_neg + 1;
+      FIN_SI
+    FIN_SI
+    LEER(arch, alumno);
+  FIN_MIENTRAS
+  CorteSx()
+
+  ESC("De todos los ingresada/os en 2009...")
+  ESC("Hubieron", cont_total_pos, " con > 20 materias aprobadas")
+  ESC("Hubieron", cont_total_neg, " con < 20 materias aprobadas")
+FIN_ACCION
