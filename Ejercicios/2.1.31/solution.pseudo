@@ -1,0 +1,123 @@
+// El siguiente es un ejercicio del primer parcial del año 2017: La empresa TICKET-TEC ha generado una secuencia de caracteres con
+// información de sus ventas para los eventos de los últimos 3 meses, cuya estructura se describe a continuación.
+
+// Inicialmente existe el nombre del local de los eventos, cuya longitud se desconoce, termina con un #; 
+// a continuación se tiene la información de todos los tickets vendidos para ese local, separado cada ticket del siguiente con el caracter !,
+// y al final de todas las ventas para ese local, el caracter &.
+// Por último la marca de fin de secuencia. También en el caso de butaca se desconoce la longitud del número, termina con un guión.
+
+// EJEMPLO
+// Teatro Opera#270520171A45-2030!270520173D120-2230!280520172C233-2030!&Galpon de las Luces#070720171C5-2030!301020172A233-2230!&{fin}
+// 
+// local de eventos#Fecha del evento[ddmmaaaa] codigo del evento[1..3] butaca [sector [A,C o D], número] - horario evento [hhmm]!
+// 
+// Solo hay dos horarios 20:30 y 22:30.
+// 
+// La empresa solicita un algoritmo que cumpla con las siguientes consignas:
+// 
+// Generar una nueva secuencia de salida con el mismo formato, que contenga los tickets correspondientes a un mes ingresado por el usuario.
+// 
+// Informar total general de tickets vendidos, total de tickets por evento y porcentaje de cada uno sobre el total general.
+
+ACCION tickets ES
+AMBIENTE
+  ventas: secuencia de caracter // local#ddmmaaaa3A45444-hhmm!ddmmaaaa2B223-hhmm!ticket3!&
+  v: caracter
+  sal: secuencia de caracter // local#ddMESaaaa3A23-hmm!ddMESaaaa3A23-hmm!&
+  mes: entero
+  tot: entero
+  tot_ev1: entero
+  tot_ev2: entero
+  tot_ev3: entero
+  d1: caracter
+  d2: caracter
+  mes_del_ticket: entero
+  valid: logico
+  m1: caracter
+  m2: caracter
+  i: entero
+
+  funcion char_a_num(char: caracter): entero
+  ambiente
+    x: entero
+  proceso
+    SEGUN char:
+      ='0': x := 0
+      ='1': x := 1
+      ='2': x := 2
+      ...
+      ='9': x := 9
+    FIN_SEGUN
+    char_a_num := x
+  fin_funcion
+
+PROCESO
+  ARR(ventas)
+  AVZ(ventas, v)
+  CREAR(sal)
+  ESC("De que mes desea ver las entradas?")
+  LEER(mes)
+  tot_ev1 := 0
+  tot_ev2 := 0
+  tot_ev3 := 0
+  tot := 0
+
+  MIENTRAS NFDS(ventas) HACER
+    MIENTRAS NFDS(ventas) y v <> '#' HACER
+      ESC(sal, v)
+      AVZ(ventas, v)
+    FIN_MIENTRAS
+    ESC(sal, v)
+    AVZ(ventas, v)
+    MIENTRAS NFDS(ventas) y v <> '&' HACER
+      valid := F
+      d1 := v
+      AVZ(ventas, v)
+      d2 := v
+      AVZ(ventas, v)
+      mes_del_ticket := char_a_num(v) * 10
+      m1 := v
+      AVZ(ventas, v)
+      m2 := v
+      mes_del_ticket := char_a_num(v) + mes_del_ticket
+      SI mes_del_ticket = mes HACER
+        valid := V
+        ESC(sal, d1)
+        ESC(sal, d2)
+        ESC(sal, m1)
+        ESC(sal, m2)
+      FIN_SI
+      PARA i:=1 HASTA 4 HACER
+        SI valid HACER
+          ESC(sal, v)
+        FIN_SI
+        AVZ(ventas, v)
+      FIN_PARA
+
+      SEGUN v:
+        ='1': tot_ev1 := tot_ev1 + 1
+        ='2': tot_ev2 := tot_ev2 + 1
+        ='3': tot_ev3 := tot_ev3 + 1
+      FIN_SEGUN
+      tot := tot + 1
+      MIENTRAS NFDS(ventas) y v <> '!' HACER
+        SI valid HACER
+          ESC(sal, v)
+        FIN_SI
+        AVZ(ventas, v)
+      FIN_MIENTRAS
+      AVZ(ventas, v)
+      SI valid HACER
+        ESC(sal, '!')
+      FIN_SI
+    FIN_MIENTRAS
+    ESC(sal, '&')
+    AVZ(ventas, v)
+  FIN_MIENTRAS
+
+  ESC("Total de tickets vendidos: ", tot)
+  ESC("Ventas por evento: ")
+  ESC("- 1: ", tot_ev1, " que representa el: ", (tot_ev1 * 100) / tot, "%")
+  ESC("- 2: ", tot_ev2, " que representa el: ", (tot_ev2 * 100) / tot, "%")
+  ESC("- 3: ", tot_ev3, " que representa el: ", (tot_ev3 * 100) / tot, "%")
+FIN_ACCION

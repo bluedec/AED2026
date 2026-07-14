@@ -1,0 +1,108 @@
+ACCION mascotas ES
+AMBIENTE
+  rescatados: secuencia de caracter
+  v1: caracter
+  adopciones: secuencia de caracter
+  v2: caracter
+
+  p_no_adop: entero
+  g_no_adop: entero
+  no_adop: entero
+
+  funcion char_a_num(c: caracter): entero
+  ambiente
+    x: entero
+  proceso
+    SEGUN c:
+      ='0': x:= 0
+      ...
+    FIN_SEGUN
+    char_a_num := x
+  fin_funcion
+
+  sal: secuencia de caracter
+  ids_no_adop: secuencia de entero
+
+  id: entero
+  id_adop: entero
+
+  es_perro: logico
+  fue_adoptado: logico
+  guardar: logico
+
+
+PROCESO
+  ARR(rescatados)
+  ARR(adopciones)
+  AVZ(rescatados, v1)
+  AVZ(adopciones, v2)
+
+  p_no_adop := 0
+  g_no_adop := 0
+  no_adop := 0
+  CREAR(sal)
+  CREAR(ids_no_adop)
+
+  MIENTRAS v1 <> '*' y NFDS(rescatados) HACER     // 01CM010Huesos#256..02FM030Michi#255..
+    es_perro := F
+    fue_adoptado := F
+    guardar := F
+    id := (char_a_num(v1) * 10)
+    AVZ(rescatados, v1)
+    id := id + char_a_num(v1)
+    AVZ(rescatados, v1)
+    SI v1 = 'C' HACER
+      es_perro := V
+    FIN_SI               // idaammdd.......%3624301794..idaammdd
+
+    id_adop := char_a_num(v2) * 10
+    AVZ(adopciones, v2)
+    id_adop := id_adop + char_a_num(v2)
+    AVZ(adopciones, v2)
+
+    SI id_adop = id HACER   // M010Huesos#numero$
+      fue_adoptado := V
+    SINO
+      ESC(ids_no_adop, id)
+      no_adop := no_adop + 1
+      SI v1 = 'C' HACER
+        p_no_adop := p_no_adop + 1
+      SINO
+        SI v1 = 'F' HACER
+          g_no_adop := g_no_adop + 1
+        FIN_SI
+      FIN_SI
+    FIN_SI
+    SI fue_adoptado y es_perro HACER
+      guardar := V
+    FIN_SI
+
+    AVZ(rescatados, v1)
+
+    REPETIR:
+      SI guardar HACER
+        ESC(sal, v1)
+      FIN_SI
+      AVZ(rescatados, v1)
+    HASTA QUE v1 = '#'
+
+    SI guardar HACER
+      REPETIR:
+        AVZ(adopciones, v2)
+      HASTA QUE v2 = '%'
+      AVZ(adopciones, v2)
+      PARA i:=0 HASTA 9 HACER
+        ESC(sal, v2)
+        AVZ(adopciones, v2)
+      FIN_PARA
+      ESC(sal, '$')
+    FIN_SI
+
+    PARA i:=0 HASTA 3 HACER
+      AVZ(rescatados, v1)
+    FIN_PARA
+  FIN_MIENTRAS
+
+  ESC("El ", (p_no_adop * 100) / no_adop, " de los que no fueron adoptados fueron perros")
+  ESC("El ", (g_no_adop * 100) / no_adop, " de los que no fueron adoptados fueron gatos")
+FIN_ACCION

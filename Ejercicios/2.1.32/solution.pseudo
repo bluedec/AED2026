@@ -1,0 +1,88 @@
+// Se posee una secuencia con los mensajes internos enviados entre los empleados de una empresa,
+// la secuencia está formada de la siguiente manera: 3 caracteres para el destino, 3 caracteres para el origen,
+// 3 caracteres que indican la cantidad de caracteres que tiene el mensaje y el mensaje.
+// No existe ningún carácter que separe un mensaje de otro. se pide:
+
+// Escribir una secuencia de salida con todos los mensajes (incluyendo origen y destino) que van hacia el área de Mantenimiento (que destino comience con 1).
+// Contar la cantidad de mensajes que se dirigen hacia el área de sistemas (que destino comience con 23).
+
+ACCION mensajes ES
+AMBIENTE
+  mensajes: secuencia de caracter // 111333003aaa111222555bbbbbbbbbbbbbbbbb
+  c: caracter
+  sal: secuencia de caracter
+
+  long: entero
+  tot_sis: entero
+
+  guardar: logico
+
+  d1, d2: caracter
+
+  funcion char_a_num(c: caracter): entero
+  ambiente
+    x: entero
+  proceso
+    SEGUN c:
+      ='0': x:= 0
+      ...
+      ='9': x:= 9
+    FIN_SEGUN
+    char_a_num := x
+  fin_funcion
+  
+  i: entero
+
+
+PROCESO
+  ARR(mensajes)
+  AVZ(mensajes, c)
+  CREAR(sal)
+  long := 0
+  tot_sis := 0
+
+
+  MIENTRAS NFDS(mensajes) HACER
+    guardar := F
+
+    d1 := c
+    AVZ(mensajes, c)
+    d2 := c
+    SI d1 = '2' y d2 = '3' HACER
+      tot_sis := tot_sis + 1
+    SINO
+      SI d1 = '1' HACER
+        guardar := V   // 111333003aaa111222555bbbbbbbbbbbbbbbbb
+        ESC(sal, d1)
+        ESC(sal, d2)
+      FIN_SI
+    FIN_SI
+    AVZ(mensajes, c)
+
+    PARA i:=0 HASTA 4 HACER
+      SI guardar HACER
+        ESC(sal, c)
+      FIN_SI
+      AVZ(mensajes, c)
+    FIN_PARA
+    
+    long := 0
+    PARA i:=1 HASTA 3 HACER
+      SI guardar HACER
+        ESC(sal, c)
+      FIN_SI
+      long := (long * 10) + char_a_num(c)
+      AVZ(mensajes, c)
+    FIN_PARA
+
+    PARA i:= 1 HASTA long HACER
+      SI guardar HACER
+        ESC(sal, c)
+      FIN_SI
+      AVZ(mensajes, c)
+    FIN_PARA
+  FIN_MIENTRAS
+
+  ESC("La cantidad de mensajes hacia el area de sistemas es de: ", tot_sis)
+FIN_ACCION
+

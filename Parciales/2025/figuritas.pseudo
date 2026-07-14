@@ -1,0 +1,162 @@
+// La FIFA desea analizar la participación de los jugadores por equipo en el Mundial de Clubes.
+
+// Para ello cuenta con dos secuencias de caracteres:
+
+// SECUENCIA_JUGADORES:
+// Confederación-NombreEquipo-NombreJugador*Edad(2)NroJugador(2)#NombreJugador*Edad(2)NroJugador(2)#...%NombreEquipo-NombreJugador*….$Confederación-..
+
+// El guión - separa Confederaciones y nombre del equipo, El nombre del jugador termina con *, 
+// Confederación finaliza con $, Equipo finaliza con %, jugador termina con #, Por cada
+// confederación existen varios equipo y por cada equipo existen varios jugadores
+
+// Ejemplo secuencia jugadores: UEFA-Real Madrid-Luka Modric*3801#Vinicius
+// Jr*2402#Jude Bellingham*2103#%Manchester City-Kevin De Bruyne*3304#Erling
+// Haaland*2405#Phil Foden*2306#%$CONMEBOL-Fluminense-Germán Cano*3607#André
+// Trindade*2208#%Boca Juniors-Edinson Cavani*3709#Luis Advíncula*3410#%$*
+
+// SECUENCIA_ESTADISTICAS:
+// Goles(2caracteres)Asistencias(2caracteres)MinutosJugados(4caracteres)Tarje
+// tasAmarillas(1caracter)TarjetasRojas(1caracter)#...
+// 0101027000#0403031210#0201024500#0501030010#0600028001#*
+
+// Se pide:
+// 1. Generar una secuencia de salida con los Equipos (al final del nombre poner un “/”) y
+// sus Jugadores que hayan tenido al menos un gol y una asistencia, separando los
+// jugadores con “_” y los equipos con “%” (Suponer que si o si todos los equipos tienen al
+// menos un jugador que cumple la condición)
+// NombreEquipo/NombreJugador_..._NombreJugador_%NombreEquipo/NombreJugador_..._%*
+
+// 2. Informar por pantalla el promedio de edad de los jugadores por cada equipo. EJ
+// (Real madrid 23,4)
+
+// 3. Informar cuántos jugadores tuvieron más de tres amarillas por confederación.
+
+
+ACCION equipos ES
+AMBIENTE
+  secJug: secuencia de caracter // conf-equipo-nombrejug*0022#nombrejug*0022#nombrejug*0022#%equipo-nombrejug*2201#$*
+  secEst: secuencia de caracter // 11 22 3333 4 5
+  secEqu: secuencia de caracter // equipo/jug_jug_jug_%equipo/jug_jug_jug_%*
+  v1, v2: caracter
+
+  cont_jug: entero
+  cont_edad: entero
+  prom: real(2, 1)
+
+  cont_agresivos: entero
+  goles: entero
+  asistencias: entero
+  guardar: logico
+
+  funcion char_a_num(c: caracter): entero
+  ambiente
+    x: entero
+  proceso
+    SEGUN c HACER
+      ='0': x:= 0
+      ...
+    FIN_SEGUN
+    char_a_num := x
+  fin_funcion
+
+  funcion leer_numeros(sec: secuencia, vent: caracter lugares: entero): entero
+  ambiente
+    x: entero
+    i: entero
+  proceso
+    x := 0
+    PARA i:=1 HASTA lugares HACER
+      x := x * 10 + char_a_num(vent)
+      AVZ(sec, vent)
+    FIN_PARA
+    leer_numeros := x
+  fin_funcion
+
+  funcion es_valido(codigo: entero): logico
+  ambiente
+    i: entero
+    divisores: entero
+    unidad: entero
+  proceso
+    unidad := codigo % 10
+    divisores := 0
+    PARA i:=1 HASTA codigo HACER
+      SI codigo % i = 0 HACER
+        divisores := divisores + 1
+      FIN_SI
+    FIN_PARA
+    SI divisores = unidad HACER
+      es_valido := V
+    SINO
+      es_valido := F
+    FIN_SI
+  fin_funcion
+
+
+PROCESO
+  ARR(secJug) ; AVZ(secJug, v1)
+  ARR(secEst) ; AVZ(secEst, v2)
+  CREAR(secEqu)
+
+  MIENTRAS v1 <> '*' HACER
+    cont_agresivos := 0
+    REPETIR:
+      ESC(v1)
+      AVZ(secJug, v1)
+    HASTA QUE v1 = '-'
+    AVZ(secJug, v1)
+    MIENTRAS v1 <> '$' HACER
+      REPETIR:
+        ESC(v1)
+        ESC(secEqu, v1)
+        AVZ(secJug, v1)
+      HASTA QUE v1 = '-' // conf-equipo-nombrejug*0022#nombrejug*0022#nombrejug*0022# % equipo-nombrejug*2201# $ *
+      AVZ(secJug, v1)
+      ESC(secEqui, '/')
+      cont_edad := 0
+      cont_jug := 0
+
+      MIENTRAS v1 <> '%' HACER
+        cont_jug := cont_jug + 1
+        guardar := F
+        MIENTRAS v1 <> '#' HACER
+          goles := leer_numeros(secEst, v2, 2)
+          asistencias := leer_numeros(secEst, v2, 2)
+
+          SI goles > 0 y asistencias > 0 HACER
+            guardar := V
+          FIN_SI
+          PARA i:=0 HASTA 3 HACER
+            AVZ(secEst, v2)
+          FIN_PARA
+          SI leer_numeros(secEst, v2, 1) >= 3 HACER
+            cont_agresivos := cont_agresivos + 1
+          FIN_SI
+          MIENTRAS v2 <> '#' HACER
+            AVZ(secEst, v2)
+          FIN_MIENTRAS
+          AVZ(secEst, v2)
+
+          MIENTRAS v1 <> '*' HACER
+            SI guardar HACER
+              ESC(secEqui, v1)
+            FIN_SI
+            AVZ(secJug, v1)
+          FIN_MIENTRAS
+          AVZ(secJug, v1)
+          cont_edad := cont_edad + leer_numeros(secJug, v1, 2)
+          SI guardar HACER
+            ESC(secEqu, '_')
+          FIN_SI
+          AVZ(secJug, v1)
+          AVZ(secJug, v1)
+        FIN_MIENTRAS
+        AVZ(secJug, v1)
+      FIN_MIENTRAS
+      ESC(secEqu, '%')
+      ESC("Promedio de edad: ", cont_edad / cont_jug)
+    FIN_MIENTRAS
+    ESC("Jugadores agresivos(+3 amarillas): ", cont_agresivos)
+  FIN_MIENTRAS
+  ESC(secEqu, '*')
+FIN_ACCION

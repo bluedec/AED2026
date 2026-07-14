@@ -1,0 +1,109 @@
+// El siguiente es un ejercicio del primer recuperatorio del primer parcial del año 2017:
+// 
+// La AFIP dispone de dos secuencias de caracteres:
+// 
+// PERSONAS Contiene los siguientes datos de personas físicas o Empresas:
+//    nombre completo y fecha (de nacimiento o de creación, respectivamente), agrupadas por provincias.
+//    No existe carácter separador entre personas, el fin de cada provincia se indica con el carácter &.
+// Ejemplo: María Góm-14021977Carlos Alberto Rodriguez-20061990....&Lionel Messi-24061987....&....{fin} nombre-ddmmaaaanombre-ddmmaa....&
+// 
+// CUIT: contiene la Clave Unica de Identificación Tributaria de las personas de la secuencia PERSONAS (existiendo una correspondencia una
+//    a una, es decir la primer persona con el primer cuit, la segunda con el segundo y asi sucesivamente) Cada número de CUIT se almacena
+//    por medio de 11 caracteres: los 2 primeros indican el tipo, los 8 siguientes el número de DNI (en caso de personas físicas) o de
+//    sociedad (en caso de Empresas) y el último es un digito verificador.
+// Ejemplo: **20123456786**23134567823**30712434445**
+// 
+// Los tipos pueden ser:20, 23, 24 y 27 para Personas Físicas y 30, 33 y 34 para Empresas.
+// 
+// Se solicita.
+// 
+// Generar una secuencia de salida que contenga DNI, y el nombre completo de todas las personas físicas cuyo nombre comience con vocal.
+// Para cada Provincia calcular el total de personas físicas y el porcentaje sobre el total de la provincia.
+
+ACCION afip ES
+AMBIENTE
+  personas: secuencia de caracter // nombre-ddmmaaaanombre-ddmmaaaa&nombre-ddmmaaaanombre...
+  v1: caracter
+  cuit: secuencia de caracter // **00111111222**00111111222
+  v2: caracter
+
+  sal: secuencia de caracter // dninombre dninombre  (de los que comienzan con vocal)
+  tot_provincial_fisico: entero
+  tot_provincial: entero
+  es_persona: logico
+  debe_guardarse: logico
+  i: entero
+
+  vocales       := ['a', 'e', 'i', 'o', 'u']
+  tipos_fisicos := [20, 23, 24, 27]
+  tipo: entero
+
+  funcion char_a_num(char: caracter): entero
+  ambiente
+    x: entero
+  proceso
+    SEGUN char:
+      ='0': x:= 0
+      ='1': x:= 1
+      ...
+      ='9': x:= 9
+    FIN_SEGUN
+    char_a_num := x
+  fin_funcion
+
+PROCESO
+  ARR(personas)
+  ARR(cuit)
+  AVZ(personas, v1)
+  AVZ(cuit, v2)
+  CREAR(sal)
+
+  MIENTRAS NFDS(personas) y NFDS(cuit) HACER
+    tot_provincial_fisico := 0
+    tot_provincial := 0
+    MIENTRAS NFDS(personas) y v1 <> '&' HACER
+      es_persona := F
+      debe_guardarse := F
+      tipo := 0
+
+      PARA i:=0 HASTA 1 HACER
+        tipo := (tipo * 10) + char_a_num(v2)
+        AVZ(cuit, v2)
+      FIN_PARA
+      SI tipo en tipos_fisicos HACER
+        es_persona := V
+        tot_provincial_fisico := tot_provincial_fisico + 1
+      FIN_SI
+      tot_provincial := tot_provincial + 1
+      SI v1 en vocales y es_persona HACER
+        debe_guardarse := V
+      FIN_SI
+      PARA i:=1 HASTA 8 HACER
+        SI debe_guardarse HACER
+          ESC(sal, v2)
+        FIN_SI
+        AVZ(cuit, v2)
+      FIN_PARA
+      AVZ(cuit, v2)
+      MIENTRAS NFDS(personas) y v1 <> '-' HACER
+        SI debe_guardarse HACER
+          ESC(sal, v1)
+        FIN_SI
+        AVZ(personas, v1)
+      FIN_MIENTRAS
+      SI debe_guardarse HACER
+        ESC(sal, ' ')
+      FIN_SI
+      PARA i:=0 HASTA 8 HACER
+        AVZ(personas, v1)
+      FIN_PARA
+    FIN_MIENTRAS
+    ESC("Cantidad de personas fisicas en la provincia: ", tot_provincial_fisico);
+    ESC("Representan un: ", (tot_provincial_fisico * 100) / tot_provincial, "% de las personas de la provincia");
+    AVZ(personas, v1)
+  FIN_MIENTRAS
+FIN_ACCION
+
+
+
+
